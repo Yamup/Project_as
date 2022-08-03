@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <title>jason table</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+     </head>
+     <body>
+    <style type="text/css">
+        .js-form,.update{
+            display: none;
+        }
+        .table-row{
+            display: none;
+        }
+    </style>
+    <!-- Dummy table for appending html table row -->
+    <table class="table-row table">
+        <tr class="index" data-index="0">
+            <th scope="row"></th>
+            <td class="field-1"><span class="name"></span><input type="text" class="form-control js-form" name="Name"></td>
+            <td><span class="id"></span><input type="text" class="form-control js-form" name="Id"></td>
+            <td><span class="mobile"></span><input type="tel" class="form-control js-form" name="Mobile"></td>
+            <td><span class="email"></span><input type="email" class="form-control js-form" name="Email"></td>
+            <td><button class="btn edit btn-success">Edit</button><button class="btn edit btn-primary update">Update</button></td>
+            <td><button class="btn remove btn-danger">Delete</button></td>
+    </table>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-xl-6 col-sm-12">
+                <form class="form" method="POST" id="jsonrespon">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Mobile</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody id="capture">
+                        
+                    </tbody>
+                  </table>
+                  <input type="submit" name="submit" value="Save" class="btn btn-success">
+                  <form>
+                <button id="addRows" class="btn btn-primary">
+                    <span>Add more rows</span>
+                </button>
+            </div>
+            <div class="col-6 col-xl-6 col-sm-12">
+                <h3>Json Result</h3>
+                <pre id="result"></pre>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function(){
+            $(document).on('click','#addRows',function(event){
+                 event.preventDefault();
+                event.stopPropagation();
+                var html = $('.table-row tbody').html();
+                    $('#capture').append(html);
+            });
+            $(document).on('click','.remove',function(event){
+                event.preventDefault();
+                event.stopPropagation();
+                $(this).parents('tr').remove();
+            });
+            $(document).on('click','.edit',function(event){
+               event.preventDefault();
+               event.stopPropagation();
+               $(this).parents('tr').find('td span').hide().next('input').show();
+            });
+            $(document).on('change keyup','.js-form',function(){
+                $(this).parents('tr').find('.update').show().prev('.edit').hide();
+            });
+            $(document).on('click','.update',function(event){
+               event.preventDefault();
+               event.stopPropagation();
+               
+               var name = $(this).parents('tr').find('.js-form[name=Name]').val();
+               var id = $(this).parents('tr').find('.js-form[name=Id]').val();
+               var mobile = $(this).parents('tr').find('.js-form[name=Mobile]').val();
+               var email = $(this).parents('tr').find('.js-form[name=Email]').val();
+               $(this).parents('tr').find('td .name').html(name);
+               $(this).parents('tr').find('td .id').html(id);
+               $(this).parents('tr').find('td .mobile').html(mobile);
+               $(this).parents('tr').find('td .email').html(email);
+               $(this).parents('tr').find('td span').show();
+               $(this).parents('tr').find('.edit').show();
+               $(this).parents('tr').find('.js-form').hide();
+               $(this).hide();
+            });
+            $(document).on('submit','#jsonrespon',function(event){
+                event.preventDefault();
+                event.stopPropagation();
+
+                var data = $('#jsonrespon').serialize();
+                var obj = JSON.stringify($("#jsonrespon").serializeArray());
+                // console.log(typeof(JSON.parse(data)));
+                $('#result').text(obj) ;
+            })
+        });
+    </script>
+         
+
+        
+     </body>
+</html>
